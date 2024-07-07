@@ -91,6 +91,11 @@ if get_option('tests')
 		['arv-roi-test',		'arvroitest.c'],
 		['time-test',			'timetest.c'],
 		['load-http-test',		'loadhttptest.c'],
+
+		['arv-save-camera-xml-test',	'arvsavecameraxmltest.c'],
+		['arv-save-camera-bin-test',	'arvsavecamerabintest.c'],
+		['arv-set-camera-test',	'arvsetcameratest.c'],
+
 		['cpp-test',			'cpp.cc']
 	]
 
