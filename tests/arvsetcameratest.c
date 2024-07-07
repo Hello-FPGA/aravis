@@ -63,7 +63,7 @@ fakemain(int argc, char** argv)
 
 
 /**
- * arv_device_save_test : 通过传入曝光时间、帧率、width、height设置camera属性：arv_device_save_test.exe -e 16000.00 -f 10.0 -h 1024 -w 1024
+ * arv_set_camera_test : 通过传入曝光时间、帧率、width、height设置camera属性：arv_device_save_test.exe -e 16000.00 -f 10.0 -h 1024 -w 1024
  *
  */
 int 

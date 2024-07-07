@@ -17,6 +17,10 @@ write_buffer(char *path, char *buf, int size){
     fclose(outfile);
 }
 
+/**
+ * arv_save_camera_bin_test: 保存camera的Buffer数据到bin文件中
+ *
+ */
 int
 main(int argc, char const *argv[])
 {
