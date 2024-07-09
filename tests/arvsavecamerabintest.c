@@ -45,6 +45,8 @@ main(int argc, char const *argv[])
         gboolean is_start_timer = TRUE;
         gboolean read_buffer_success = FALSE;
         char *buffer_data;
+        unsigned buffer_count = 0;
+        unsigned buffer_total = 0;
 
 		// 打开已收集到设备
 		camera = arv_camera_new (arv_get_device_id (i), NULL);
@@ -59,7 +61,7 @@ main(int argc, char const *argv[])
         /* Set region of interrest to a 1024X1024 pixel area */
         arv_camera_set_region (camera, 0, 0, 1024, 1024, NULL);
         /* Set frame rate to 10 Hz */
-        arv_camera_set_frame_rate (camera, 10.0, NULL);
+        arv_camera_set_frame_rate (camera, 10, NULL);
 
         /* Create a new stream object */
         stream = arv_camera_create_stream (camera, NULL, NULL, &gerror);
@@ -82,17 +84,20 @@ main(int argc, char const *argv[])
 
         if (gerror == NULL){
             /* Start the video stream */
+            arv_stream_set_emit_signals (stream, TRUE);
             arv_camera_start_acquisition (camera, &gerror);
         }
+
         // 创建计时器
         timer = g_timer_new ();
+        if(is_start_timer){
+            // 开始计时
+            g_timer_start (timer);
+            is_start_timer = FALSE;
+        }
         
         do {
-            if(is_start_timer){
-                // 开始计时
-                g_timer_start (timer);
-                is_start_timer = FALSE;
-            }
+            
             buffer = arv_stream_timeout_pop_buffer(stream, 2000000);
 		    if (ARV_IS_BUFFER (buffer)){
                 if (arv_buffer_get_status (buffer) == ARV_BUFFER_STATUS_SUCCESS) {
@@ -101,14 +106,19 @@ main(int argc, char const *argv[])
 							arv_buffer_get_image_height (buffer));
                     buffer_data = arv_buffer_get_image_data (buffer, &buffer_size);
                     write_buffer("D:\\2.bin",buffer_data,buffer_size);
+                    buffer_count++;
+                    buffer_total++;
+                    if (buffer_count == 10) {
+                        g_usleep(1000000);
+                        buffer_count = 0;
+                    }
                     arv_stream_push_buffer (stream, buffer);
                     read_buffer_success = TRUE;
                 }else{
                     read_buffer_success = FALSE;
                 }
-                 g_usleep(10);
 		    }else{
-                    read_buffer_success = FALSE;
+                read_buffer_success = FALSE;
             }
 
             if(!read_buffer_success){
@@ -117,14 +127,16 @@ main(int argc, char const *argv[])
         }while (g_timer_elapsed (timer, NULL) < 30);
         // 设置30s g_timer_elapsed (timer, NULL) < 30
 
-        if (gerror == NULL)
+        if (gerror == NULL){
             arv_camera_stop_acquisition (camera, &gerror);
+            arv_stream_set_emit_signals (stream, FALSE);
+        }
 
         g_clear_object (&stream);
         g_clear_error (&gerror);
         // 销毁计时器
         g_timer_destroy(timer);
-            
+        printf ("Frame rate = %d Hz\n", buffer_total);   
     }
     return 0;
 }
