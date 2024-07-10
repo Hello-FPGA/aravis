@@ -109,7 +109,7 @@ main(int argc, char const *argv[])
                     buffer_count++;
                     buffer_total++;
                     if (buffer_count == 10) {
-                        g_usleep(1000000);
+                        g_usleep(10000);
                         buffer_count = 0;
                     }
                     arv_stream_push_buffer (stream, buffer);
@@ -136,7 +136,7 @@ main(int argc, char const *argv[])
         g_clear_error (&gerror);
         // 销毁计时器
         g_timer_destroy(timer);
-        printf ("Frame rate = %d Hz\n", buffer_total);   
+        printf ("Frames number= %d \n", buffer_total);   
     }
     return 0;
 }
