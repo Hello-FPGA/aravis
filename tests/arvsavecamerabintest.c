@@ -76,7 +76,7 @@ main(int argc, char const *argv[])
 
         if (gerror == NULL) {
             for (i = 0 ; i < 100; i++){
-                arv_stream_push_buffer (stream, arv_buffer_new (payload_size, FALSE));
+                arv_stream_push_buffer (stream, arv_buffer_new (payload_size, NULL));
             }  
         }
 
@@ -109,7 +109,7 @@ main(int argc, char const *argv[])
                     buffer_count++;
                     buffer_total++;
                     if (buffer_count == 10) {
-                        g_usleep(1000000);
+                        g_usleep(10);
                         buffer_count = 0;
                     }
                     arv_stream_push_buffer (stream, buffer);
@@ -122,9 +122,9 @@ main(int argc, char const *argv[])
             }
 
             if(!read_buffer_success){
-                 printf("buffer has no data\n");
+                printf("buffer has no data\n");
             }
-        }while (g_timer_elapsed (timer, NULL) < 30);
+        }while (g_timer_elapsed (timer, NULL) < 31);
         // 设置30s g_timer_elapsed (timer, NULL) < 30
 
         if (gerror == NULL){
