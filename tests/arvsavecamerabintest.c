@@ -136,7 +136,7 @@ main(int argc, char const *argv[])
         g_clear_error (&gerror);
         // 销毁计时器
         g_timer_destroy(timer);
-        printf ("Frame rate = %d Hz\n", buffer_total);   
+        printf ("Frames number= %d \n", buffer_total);   
     }
     return 0;
 }
